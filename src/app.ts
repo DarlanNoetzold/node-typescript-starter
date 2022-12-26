@@ -21,7 +21,7 @@ class App {
   }
 
   private database (): void {
-    mongoose.connect(`mongodb://${process.env.DB_HOST}:27017/tsexample`, { useNewUrlParser: true })
+    mongoose.connect("mongodb+srv://darlan:d123456@cluster0.dqwados.mongodb.net/teste?retryWrites=true&w=majority", { useNewUrlParser: true })
   }
 
   private routes (): void {
