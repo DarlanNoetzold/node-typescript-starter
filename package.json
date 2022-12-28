@@ -9,8 +9,11 @@
     "build": "sucrase ./src -d ./dist --transforms typescript,imports"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.0",
+    "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.4.19"
   },
   "devDependencies": {

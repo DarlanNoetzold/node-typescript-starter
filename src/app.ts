@@ -2,7 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 
-import routes from './routes'
+import messageRoutes from './routes/MessageRoutes'
+import userRoutes from './routes/UserRoutes'
+
 
 class App {
   public express: express.Application
@@ -24,9 +26,10 @@ class App {
     mongoose.connect("mongodb+srv://darlan:d123456@cluster0.dqwados.mongodb.net/teste?retryWrites=true&w=majority", { useNewUrlParser: true })
   }
 
-  private routes (): void {
-    this.express.use(routes)
-  }
+  private routes(): void {
+    this.express.use('/usuarios', userRoutes);
+    this.express.use('/mensagem', messageRoutes);
+}
 }
 
 export default new App().express
