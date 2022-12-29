@@ -1,18 +1,56 @@
-import { Request, Response } from 'express'
-import { User } from '../schemas/User'
+import { Request, Response } from "express";
+import Usuario from '../schemas/User';
+import Mensagem from '../schemas/Message';
+import mensagemService from "../services/MessageService";
 
-class UserController {
-  public async index (req: Request, res: Response): Promise<Response> {
-    const users = await User.find()
-    
-    return res.json(users)
-  }
+class UsuarioController {
 
-  public async store (req: Request, res: Response): Promise<Response> {
-    const user = await User.create(req.body)
+    public async listar(req: Request, res: Response): Promise<Response> {
+        const idUsuarioLogado = req.usuario._id;
 
-    return res.json(user)
-  }
+        const usuarios = await Usuario.buscaTodosChat(idUsuarioLogado);
+
+        const usuariosMsg = await Promise.all(usuarios.map(usuario => {
+               
+            return Mensagem.buscaChat(idUsuarioLogado, usuario._id)
+                .sort('-createdAt')
+                .limit(1)
+                .map(mensagens => mensagemService.getResultadoMensagemUsuario(mensagens, usuario));
+        }));
+
+        const mensagensOrdenadas = mensagemService.retornaMensagensOrdenadas(usuariosMsg);
+
+        return res.json(mensagensOrdenadas);
+    }  
+
+    public async cadastrar(req: Request, res: Response): Promise<Response> {
+        const usuario = await Usuario.create(req.body);
+        return res.json(usuario);
+    }
+
+    public async autenticar(req: Request, res: Response): Promise<Response> {
+
+        const { nome, senha } = req.body;
+
+        const usuario = await Usuario.findOne({ nome });
+
+        if (!usuario) {
+            return res.status(400).send({ message: 'Usuário não encontrado!'});
+        }
+
+        if (!(await usuario.compareHash(senha))) {
+            return res.status(400).json({ message: 'Senha inválida!' });
+        }
+
+        return res.json({
+            usuario,
+            token: usuario.generateToken()
+        });
+    }
+
+    public getById(req: Request, res: Response): Response {
+        return res.json(req.usuarioChat);
+    }  
 }
 
-export default new UserController()
+export default new UsuarioController();
