@@ -1,9 +1,12 @@
-import { Router } from 'express'
-import UserController from '../controllers/UserController'
+import { Router } from 'express';
+import usuarioController from '../controllers/UserController';
+import authMiddleware from '../middlewares/auth';
 
-const routes = Router()
+const router = Router();
+router.get('/', authMiddleware.autorizarUsuarioByToken, usuarioController.listar);
+router.get('/:id', authMiddleware.autorizarUsuarioByParams, usuarioController.getById);
+router.post('/cadastro', usuarioController.cadastrar);
+router.post('/login', usuarioController.autenticar);
 
-routes.get('/users', UserController.index)
-routes.post('/users', UserController.store)
+export default router;
 
-export default routes
