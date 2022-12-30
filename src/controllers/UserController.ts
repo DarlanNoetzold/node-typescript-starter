@@ -6,7 +6,12 @@ import mensagemService from "../services/MessageService";
 class UsuarioController {
 
     public async listar(req: Request, res: Response): Promise<Response> {
-        const idUsuarioLogado = req.usuario._id;
+        var idUsuarioLogado;
+        if(req.usuario != null){
+            idUsuarioLogado = req.usuario._id;
+        }else{
+            idUsuarioLogado = 1;
+        }
 
         const usuarios = await Usuario.buscaTodosChat(idUsuarioLogado);
 
