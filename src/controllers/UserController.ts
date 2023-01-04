@@ -6,20 +6,18 @@ import mensagemService from "../services/MessageService";
 class UsuarioController {
 
     public async listar(req: Request, res: Response): Promise<Response> {
-        var idUsuarioLogado;
+        const idUsuarioLogado = "1";
         if(req.usuario != null){
-            idUsuarioLogado = req.usuario._id;
-        }else{
-            idUsuarioLogado = 1;
+            const idUsuarioLogado = req.usuario._id;
         }
 
         const usuarios = await Usuario.buscaTodosChat(idUsuarioLogado);
 
-        const usuariosMsg = await Promise.all(usuarios.map(usuario => {
+        const usuariosMsg = await Promise.all(usuarios.map(async usuario => {
                
-            return Mensagem.buscaChat(idUsuarioLogado, usuario._id)
+            return (await Mensagem.buscaChat(idUsuarioLogado, usuario._id)
                 .sort('-createdAt')
-                .limit(1)
+                .limit(1))
                 .map(mensagens => mensagemService.getResultadoMensagemUsuario(mensagens, usuario));
         }));
 
