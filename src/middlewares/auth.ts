@@ -21,7 +21,7 @@ class AuthMiddleware {
             if (!usuario) {
                 return res.status(400).send({ message: 'Usuário não encontrado!'});
             }
-
+            
             req.usuario = usuario;
             return next();
         } catch (error) {

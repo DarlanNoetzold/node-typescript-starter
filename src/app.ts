@@ -29,7 +29,11 @@ class App {
   private routes(): void {
     this.express.use('/usuarios', userRoutes);
     this.express.use('/mensagem', messageRoutes);
-}
+ }
+ 
+  public getApp(): express.Application {
+    return this.express;
+  }
 }
 
 export default new App().express

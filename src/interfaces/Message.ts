@@ -7,4 +7,4 @@ export interface MensagemInterface {
 
 export interface MensagemChat extends MensagemInterface{
     isRemetente: boolean;
-}   
+}
